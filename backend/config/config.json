@@ -1,0 +1,31 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "harsh19102029",
+    "database": "marketplace_dev",
+    "host": "localhost",
+    "port": 5433,
+    "dialect": "postgres",
+    "logging": true,
+    "seederStorage": "sequelize"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "harsh19102029",
+    "database": "marketplace_test",
+    "host": "localhost",
+    "dialect": "postgres",
+    "logging": false
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres",
+    "logging": false,
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}

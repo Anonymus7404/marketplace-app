@@ -4,14 +4,14 @@ services:
     container_name: marketplace_postgres
     environment:
       POSTGRES_DB: marketplace_dev
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secure_password_123
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: harsh19102029
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d marketplace_dev"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d marketplace_dev"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -52,9 +52,10 @@ services:
     environment:
       NODE_ENV: development
       POSTGRES_DB: marketplace_dev
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secure_password_123
-      DATABASE_URL: postgres://admin:secure_password_123@postgres:5432/marketplace_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: harsh19102029
+      DATABASE_URL: postgres://postgres:harsh19102029@postgres:5432/marketplace_dev
+      # DATABASE_URL=postgres://postgres:19102029%40Harsh@postgres:5433/marketplace_dev
 
       REDIS_HOST: redis
       REDIS_PORT: 6379

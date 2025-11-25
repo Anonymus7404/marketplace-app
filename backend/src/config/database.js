@@ -1,22 +1,25 @@
 const { Sequelize } = require('sequelize');
-require('dotenv').config();
+const config = require('../../config/config.json');
+
+const environment = process.env.NODE_ENV || 'development';
+const dbConfig = config[environment];
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASS,
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
   {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: 'postgres',
-    logging: process.env.NODE_ENV === 'development' ? console.log : false,
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
+    host: dbConfig.host,
+    port: dbConfig.port,
+    dialect: dbConfig.dialect,
+    logging: dbConfig.logging,
+    pool: dbConfig.pool,
+    define: {
+      timestamps: true,
+      underscored: false,
+      paranoid: true
     }
   }
 );
 
-module.exports = { sequelize };
+module.exports = { sequelize, Sequelize };
