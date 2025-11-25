@@ -17,7 +17,7 @@ const sequelize = new Sequelize(
     define: {
       timestamps: true,
       underscored: false,
-      paranoid: true
+      paranoid: false
     }
   }
 );

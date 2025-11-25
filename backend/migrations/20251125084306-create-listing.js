@@ -1,5 +1,4 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Listings', {
@@ -10,37 +9,60 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       provider_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Providers',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       category_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Categories',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(200),
+        allowNull: false
       },
       description: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        allowNull: true
       },
       location: {
-        type: Sequelize.JSONB
+        type: Sequelize.JSONB,
+        defaultValue: {}
       },
       price_model: {
-        type: Sequelize.JSONB
+        type: Sequelize.JSONB,
+        defaultValue: {}
       },
       photos: {
-        type: Sequelize.JSONB
+        type: Sequelize.JSONB,
+        defaultValue: []
       },
       policies: {
-        type: Sequelize.JSONB
+        type: Sequelize.JSONB,
+        defaultValue: {}
       },
       deposit_amount: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.DECIMAL(10, 2),
+        defaultValue: 0.00
       },
       is_active: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
       },
       is_featured: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,
@@ -49,9 +71,20 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deletedAt: {
+        type: Sequelize.DATE,
+        allowNull: true
       }
     });
+
+    // Add indexes
+    await queryInterface.addIndex('Listings', ['provider_id']);
+    await queryInterface.addIndex('Listings', ['category_id']);
+    await queryInterface.addIndex('Listings', ['is_active']);
+    await queryInterface.addIndex('Listings', ['is_featured']);
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Listings');
   }

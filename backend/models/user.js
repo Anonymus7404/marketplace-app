@@ -4,16 +4,14 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // A user can be a provider
       User.hasOne(models.Provider, {
         foreignKey: 'user_id',
         as: 'provider_profile'
       });
       
-      // A user can have many bookings
       User.hasMany(models.Booking, {
         foreignKey: 'customer_id',
-        as: 'bookings'
+        as: 'customer_bookings'
       });
     }
   }
@@ -26,28 +24,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING(100),
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        len: [2, 100]
-      }
+      allowNull: false
     },
     phone: {
       type: DataTypes.STRING(15),
       allowNull: false,
-      unique: true,
-      validate: {
-        is: /^\+?[\d\s-()]+$/,
-        len: [10, 15]
-      }
+      unique: true
     },
     email: {
       type: DataTypes.STRING(100),
       allowNull: true,
-      unique: true,
-      validate: {
-        isEmail: true
-      }
+      unique: true
     },
     user_type: {
       type: DataTypes.ENUM('customer', 'provider', 'admin'),
@@ -78,14 +65,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
     tableName: 'Users',
-    paranoid: true,
-    hooks: {
-      beforeCreate: (user) => {
-        if (user.email) {
-          user.email = user.email.toLowerCase();
-        }
-      }
-    }
+    paranoid: false // Remove paranoid
   });
   
   return User;

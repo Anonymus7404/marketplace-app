@@ -1,29 +1,67 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Provider extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      Provider.belongsTo(models.User, {
+        foreignKey: 'user_id',
+        as: 'User'
+      });
+      
+      Provider.hasMany(models.Listing, {
+        foreignKey: 'provider_id',
+        as: 'listings'
+      });
+      
+      Provider.hasMany(models.Booking, {
+        foreignKey: 'provider_id',
+        as: 'bookings'
+      });
     }
   }
+  
   Provider.init({
-    user_id: DataTypes.INTEGER,
-    business_name: DataTypes.STRING,
-    categories: DataTypes.JSONB,
-    rating: DataTypes.DECIMAL,
-    documents: DataTypes.JSONB,
-    is_approved: DataTypes.BOOLEAN,
-    approval_status: DataTypes.STRING
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    user_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    business_name: {
+      type: DataTypes.STRING(200),
+      allowNull: false
+    },
+    categories: {
+      type: DataTypes.JSONB,
+      defaultValue: []
+    },
+    rating: {
+      type: DataTypes.DECIMAL(3,2),
+      defaultValue: 0.00
+    },
+    documents: {
+      type: DataTypes.JSONB,
+      defaultValue: {}
+    },
+    is_approved: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    approval_status: {
+      type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+      defaultValue: 'pending'
+    }
   }, {
     sequelize,
     modelName: 'Provider',
+    tableName: 'Providers',
+    paranoid: false // Remove paranoid
   });
+  
   return Provider;
 };
